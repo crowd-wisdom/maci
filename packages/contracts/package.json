@@ -59,6 +59,7 @@
     "test:gitcoin_gatekeeper": "pnpm run test ./tests/GitcoinPassportGatekeeper.test.ts",
     "test:zupass_gatekeeper": "pnpm run test ./tests/ZupassGatekeeper.test.ts",
     "test:semaphore_gatekeeper": "pnpm run test ./tests/SemaphoreGatekeeper.test.ts",
+    "test:semaphore_gatekeeper_multi_group": "pnpm run test ./tests/SemaphoreGatekeeperMultiGroup.test.ts",
     "test:anon_aadhaar_gatekeeper": "pnpm run test ./tests/AnonAadhaarGatekeeper.test.ts",
     "test:simpleProjectRegistry": "pnpm run test ./tests/extensions/SimpleProjectRegistry.test.ts",
     "test:simplePayout": "pnpm run test ./tests/extensions/SimplePayout.test.ts",

@@ -31,6 +31,7 @@ import {
   TallyFactory__factory as TallyFactoryFactory,
   GitcoinPassportGatekeeper,
   SemaphoreGatekeeper,
+  SemaphoreGatekeeperMultiGroup,
   AnonAadhaarGatekeeper,
 } from "../typechain-types";
 
@@ -185,6 +186,21 @@ export const deploySemaphoreGatekeeper = async (
   quiet = false,
 ): Promise<SemaphoreGatekeeper> =>
   deployContract<SemaphoreGatekeeper>("SemaphoreGatekeeper", signer, quiet, semaphoreAddress, groupId.toString());
+
+/**
+ * Deploy a SemaphoreGatekeeper contract
+ * @param semaphoreAddress - the address of the Semaphore contract
+ * @param groupId - The group id of the semaphore group
+ * @param signer - the signer to use to deploy the contract
+ * @param quiet - whether to suppress console output
+ * @returns the deployed SemaphoreGatekeeper contract
+ */
+export const deploySemaphoreGatekeeperMultiGroup = async (
+  semaphoreAddress: string,
+  signer?: Signer,
+  quiet = false,
+): Promise<SemaphoreGatekeeperMultiGroup> =>
+  deployContract<SemaphoreGatekeeperMultiGroup>("SemaphoreGatekeeperMultiGroup", signer, quiet, semaphoreAddress);
 
 /**
  * Deploy an AnonAadhaarGatekeeper contract
