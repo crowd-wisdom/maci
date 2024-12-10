@@ -1,6 +1,6 @@
 {
   "name": "maci-integrationtests",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "",
   "main": "build/ts/index.js",
   "files": [
@@ -20,7 +20,7 @@
     "@types/chai": "^4.3.11",
     "@types/chai-as-promised": "^7.1.8",
     "@types/mocha": "^10.0.8",
-    "@types/node": "^22.8.1",
+    "@types/node": "^22.9.0",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.2",
     "hardhat": "^2.22.8",
@@ -28,16 +28,16 @@
     "hardhat-contract-sizer": "^2.0.3",
     "mocha": "^10.7.3",
     "ts-mocha": "^10.0.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.3"
   },
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "ethers": "^6.13.2",
-    "maci-circuits": "^2.4.0",
-    "maci-cli": "^2.4.0",
-    "maci-contracts": "^2.4.0",
-    "maci-core": "^2.4.0",
-    "maci-crypto": "^2.4.0",
-    "maci-domainobjs": "^2.4.0"
+    "ethers": "^6.13.4",
+    "maci-circuits": "^2.5.0",
+    "maci-cli": "^2.5.0",
+    "maci-contracts": "^2.5.0",
+    "maci-core": "^2.5.0",
+    "maci-crypto": "^2.5.0",
+    "maci-domainobjs": "^2.5.0"
   }
 }
