@@ -58,13 +58,7 @@
     "test:zupass_gatekeeper": "pnpm run test ./tests/gatekeepers/ZupassGatekeeper.test.ts",
     "test:semaphore_gatekeeper": "pnpm run test ./tests/gatekeepers/SemaphoreGatekeeper.test.ts",
     "test:anon_aadhaar_gatekeeper": "pnpm run test ./tests/gatekeepers/AnonAadhaarGatekeeper.test.ts",
-    "test:eas_gatekeeper": "pnpm run test ./tests/EASGatekeeper.test.ts",
-    "test:hats_gatekeeper": "pnpm run test ./tests/HatsGatekeeper.test.ts",
-    "test:gitcoin_gatekeeper": "pnpm run test ./tests/GitcoinPassportGatekeeper.test.ts",
-    "test:zupass_gatekeeper": "pnpm run test ./tests/ZupassGatekeeper.test.ts",
-    "test:semaphore_gatekeeper": "pnpm run test ./tests/SemaphoreGatekeeper.test.ts",
-    "test:semaphore_gatekeeper_multi_group": "pnpm run test ./tests/SemaphoreGatekeeperMultiGroup.test.ts",
-    "test:anon_aadhaar_gatekeeper": "pnpm run test ./tests/AnonAadhaarGatekeeper.test.ts",
+    "test:semaphore_gatekeeper_multi_group": "pnpm run test ./tests/gatekeepers/SemaphoreGatekeeperMultiGroup.test.ts",
     "test:simpleProjectRegistry": "pnpm run test ./tests/extensions/SimpleProjectRegistry.test.ts",
     "test:simplePayout": "pnpm run test ./tests/extensions/SimplePayout.test.ts",
     "deploy": "hardhat deploy-full",
@@ -171,6 +165,7 @@
     "benchmark:polygon-amoy": "pnpm run benchmark --network polygon_amoy"
   },
   "dependencies": {
+    "test-script": "file:../../../scripts",
     "@nomicfoundation/hardhat-ethers": "^3.0.8",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "^5.1.0",
