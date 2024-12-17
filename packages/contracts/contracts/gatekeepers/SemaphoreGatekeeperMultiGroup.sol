@@ -56,23 +56,19 @@ contract SemaphoreGatekeeperMultiGroup is SignUpGatekeeper, Ownable(msg.sender) 
   function register(address /*_user*/, bytes memory _data) public override {
     // decode the argument
     ISemaphore.SemaphoreProof memory proof = abi.decode(_data, (ISemaphore.SemaphoreProof));
-
     // ensure that the caller is the MACI contract
     if (maci != msg.sender) revert OnlyMACI();
-
     // ensure that the nullifier has not been registered yet
     if (registeredIdentities[proof.nullifier]) revert AlreadyRegistered();
-
-    // check that the scope is equal to the group id
-    if (proof.scope != groupIds[proof.scope]) revert InvalidGroup();
-
+    // check that the message is equal to the group id
+    if (proof.message != groupIds[proof.message]) revert InvalidGroup();
     // register the nullifier so it cannot be called again with the same one
     // note that given the nullifier will be hash(secret, groupId), the same
     // identity cannot then be registered twice for this group
     registeredIdentities[proof.nullifier] = true;
 
     // check if the proof validates
-    if (!semaphoreContract.verifyProof(proof.scope, proof)) revert InvalidProof();
+    if (!semaphoreContract.verifyProof(groupIds[proof.message], proof)) revert InvalidProof();
   }
 
   /// @notice Set groupId from Semaphore Groups
