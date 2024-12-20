@@ -354,6 +354,9 @@ importers:
       '@pcd/util':
         specifier: ^0.9.0
         version: 0.9.0
+      '@semaphore-deployed-contracts':
+        specifier: file:../../../scripts
+        version: scripts@file:../scripts
       '@zk-kit/imt.sol':
         specifier: 2.0.0-beta.12
         version: 2.0.0-beta.12
@@ -8993,6 +8996,9 @@ packages:
   schema-utils@4.2.0:
     resolution: {integrity: sha512-L0jRsrPpjdckP3oPug3/VxNKt2trR8TcabrM6FOAAlvC/9Phcmm+cuAgTlxBqdBR1WJx7Naj9WHw+aOmheSVbw==}
     engines: {node: '>= 12.13.0'}
+
+  scripts@file:../scripts:
+    resolution: {directory: ../scripts, type: directory}
 
   scrypt-js@3.0.1:
     resolution: {integrity: sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==}
@@ -21836,6 +21842,8 @@ snapshots:
       ajv: 8.16.0
       ajv-formats: 2.1.1(ajv@8.16.0)
       ajv-keywords: 5.1.0(ajv@8.16.0)
+
+  scripts@file:../scripts: {}
 
   scrypt-js@3.0.1: {}
 

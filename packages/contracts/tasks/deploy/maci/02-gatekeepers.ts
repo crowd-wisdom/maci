@@ -5,6 +5,7 @@ import { EDeploySteps, ESupportedChains } from "../../helpers/constants";
 import { ContractStorage } from "../../helpers/ContractStorage";
 import { Deployment } from "../../helpers/Deployment";
 import { EContracts, IDeployParams } from "../../helpers/types";
+import { getDeployedContractAddress } from "@semaphore-deployed-contracts/utilsSemaphore";
 
 const deployment = Deployment.getInstance();
 const storage = ContractStorage.getInstance();
@@ -23,12 +24,20 @@ deployment.deployTask(EDeploySteps.Gatekeepers, "Deploy gatekeepers").then((task
     const gitcoinGatekeeperContractAddress = storage.getAddress(EContracts.GitcoinPassportGatekeeper, hre.network.name);
     const zupassGatekeeperContractAddress = storage.getAddress(EContracts.ZupassGatekeeper, hre.network.name);
     const semaphoreGatekeeperContractAddress = storage.getAddress(EContracts.SemaphoreGatekeeper, hre.network.name);
+    const semaphoreGatekeeperMultiGroupContractAddress = storage.getAddress(
+      EContracts.SemaphoreGatekeeperMultiGroup,
+      hre.network.name,
+    );
     const merkleProofGatekeeperContractAddress = storage.getAddress(EContracts.MerkleProofGatekeeper, hre.network.name);
     const deployFreeForAllGatekeeper = deployment.getDeployConfigField(EContracts.FreeForAllGatekeeper, "deploy");
     const deployEASGatekeeper = deployment.getDeployConfigField(EContracts.EASGatekeeper, "deploy");
     const deployGitcoinGatekeeper = deployment.getDeployConfigField(EContracts.GitcoinPassportGatekeeper, "deploy");
     const deployZupassGatekeeper = deployment.getDeployConfigField(EContracts.ZupassGatekeeper, "deploy");
     const deploySemaphoreGatekeeper = deployment.getDeployConfigField(EContracts.SemaphoreGatekeeper, "deploy");
+    const deploySemaphoreMultiGroupGatekeeper = deployment.getDeployConfigField(
+      EContracts.SemaphoreGatekeeperMultiGroup,
+      "deploy",
+    );
     const deployHatsSingleGatekeeper = deployment.getDeployConfigField(EContracts.HatsGatekeeper, "deploy");
     const deployMerkleGateekeper = deployment.getDeployConfigField(EContracts.MerkleProofGatekeeper, "deploy");
 
@@ -37,6 +46,7 @@ deployment.deployTask(EDeploySteps.Gatekeepers, "Deploy gatekeepers").then((task
     const skipDeployGitcoinGatekeeper = deployGitcoinGatekeeper !== true;
     const skipDeployZupassGatekeeper = deployZupassGatekeeper !== true;
     const skipDeploySemaphoreGatekeeper = deploySemaphoreGatekeeper !== true;
+    const skipDeploySemaphoreGatekeeperMultiGroup = deploySemaphoreMultiGroupGatekeeper !== true;
     const skipDeployHatsGatekeeper = deployHatsSingleGatekeeper !== true;
     const skipDeployMerkleProofGatekeeper = deployMerkleGateekeper !== true;
 
@@ -47,6 +57,7 @@ deployment.deployTask(EDeploySteps.Gatekeepers, "Deploy gatekeepers").then((task
       (gitcoinGatekeeperContractAddress || skipDeployGitcoinGatekeeper) &&
       (zupassGatekeeperContractAddress || skipDeployZupassGatekeeper) &&
       (semaphoreGatekeeperContractAddress || skipDeploySemaphoreGatekeeper) &&
+      (semaphoreGatekeeperMultiGroupContractAddress || skipDeploySemaphoreGatekeeperMultiGroup) &&
       (hatsGatekeeperContractAddress || skipDeployHatsGatekeeper) &&
       (merkleProofGatekeeperContractAddress || skipDeployMerkleProofGatekeeper) &&
       (!skipDeployFreeForAllGatekeeper ||
@@ -54,6 +65,7 @@ deployment.deployTask(EDeploySteps.Gatekeepers, "Deploy gatekeepers").then((task
         !skipDeployGitcoinGatekeeper ||
         !skipDeployZupassGatekeeper ||
         !skipDeploySemaphoreGatekeeper ||
+        !skipDeploySemaphoreGatekeeperMultiGroup ||
         !skipDeployHatsGatekeeper ||
         !skipDeployMerkleProofGatekeeper);
 
@@ -194,6 +206,37 @@ deployment.deployTask(EDeploySteps.Gatekeepers, "Deploy gatekeepers").then((task
         id: EContracts.SemaphoreGatekeeper,
         contract: semaphoreGatekeeperContract,
         args: [semaphoreContractAddress, groupId.toString()],
+        network: hre.network.name,
+      });
+    }
+
+    if (!skipDeploySemaphoreGatekeeperMultiGroup) {
+      let semaphoreContractAddress
+
+      if(hre.network.name === 'localhost'){
+        semaphoreContractAddress = await getDeployedContractAddress(hre.network.name, "Semaphore")
+        console.info("Semaphore Address")
+      } else {
+        semaphoreContractAddress = deployment.getDeployConfigField<string>(
+        EContracts.SemaphoreGatekeeperMultiGroup,
+        "semaphoreContract",
+        true,
+      ); 
+      }
+
+
+      const semaphoreGatekeeperContract = await deployment.deployContract(
+        {
+          name: EContracts.SemaphoreGatekeeperMultiGroup,
+          signer: deployer,
+        },
+        semaphoreContractAddress,
+      );
+
+      await storage.register({
+        id: EContracts.SemaphoreGatekeeperMultiGroup,
+        contract: semaphoreGatekeeperContract,
+        args: [semaphoreContractAddress],
         network: hre.network.name,
       });
     }

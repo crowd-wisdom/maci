@@ -582,6 +582,7 @@ export enum EContracts {
   ZupassGatekeeper = "ZupassGatekeeper",
   ZupassGroth16Verifier = "ZupassGroth16Verifier",
   SemaphoreGatekeeper = "SemaphoreGatekeeper",
+  SemaphoreGatekeeperMultiGroup = "SemaphoreGatekeeperMultiGroup",
   MerkleProofGatekeeper = "MerkleProofGatekeeper",
   SignUpGatekeeper = "SignUpGatekeeper",
   Verifier = "Verifier",
