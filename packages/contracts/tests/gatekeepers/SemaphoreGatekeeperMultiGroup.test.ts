@@ -33,8 +33,8 @@ describe("SemaphoreMultiGroup Gatekeeper", () => {
     merkleTreeDepth: 1n,
     merkleTreeRoot: 0n,
     nullifier: 0n,
-    message: 0n,
-    scope: curatorsGroupId,
+    message: curatorsGroupId,
+    scope: 0n,
     points: [0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n],
   };
 
@@ -42,8 +42,8 @@ describe("SemaphoreMultiGroup Gatekeeper", () => {
     merkleTreeDepth: 1n,
     merkleTreeRoot: 0n,
     nullifier: 1n,
-    message: 0n,
-    scope: validatorsGroupId,
+    message: validatorsGroupId,
+    scope: 1n,
     points: [0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n],
   };
 
@@ -51,8 +51,8 @@ describe("SemaphoreMultiGroup Gatekeeper", () => {
     merkleTreeDepth: 1n,
     merkleTreeRoot: 0n,
     nullifier: 0n,
-    message: 0n,
-    scope: invalidGroupId,
+    message: invalidGroupId,
+    scope: 2n,
     points: [1n, 0n, 0n, 0n, 0n, 0n, 0n, 0n],
   };
 
@@ -81,7 +81,7 @@ describe("SemaphoreMultiGroup Gatekeeper", () => {
   );
   const encodedProofInvalidGroupId = AbiCoder.defaultAbiCoder().encode(
     ["uint256", "uint256", "uint256", "uint256", "uint256", "uint256[8]"],
-    [proof.merkleTreeDepth, proof.merkleTreeRoot, proof.nullifier, proof.message, invalidGroupId, proof.points],
+    [proof.merkleTreeDepth, proof.merkleTreeRoot, proof.nullifier, invalidGroupId, proof.scope, proof.points],
   );
 
   const encodedInvalidProof = AbiCoder.defaultAbiCoder().encode(
@@ -90,8 +90,8 @@ describe("SemaphoreMultiGroup Gatekeeper", () => {
       invalidProof.merkleTreeDepth,
       invalidProof.merkleTreeRoot,
       invalidProof.nullifier,
-      invalidProof.message,
       curatorsGroupId,
+      invalidProof.scope,
       invalidProof.points,
     ],
   );
@@ -195,6 +195,38 @@ describe("SemaphoreMultiGroup Gatekeeper", () => {
       expect(receipt?.status).to.eq(1);
     });
 
+    it("Add new group,generate proof and validate", async () => {
+      const [, secondSigner] = await getSigners();
+
+      const user2 = new Keypair();
+
+      const newGroupId = 2;
+      const newNullifier = 2;
+
+      let tx = await mockSemaphoreMultiGroup.connect(secondSigner).setSemaphoreGroups(newGroupId);
+      let receipt = await tx.wait();
+      expect(receipt?.status).to.eq(1);
+
+      tx = await semaphoreGatekeeperMultiGroup.setSemaphoreGroups(newGroupId);
+      receipt = await tx.wait();
+      expect(receipt?.status).to.eq(1);
+
+      const encodedProof = AbiCoder.defaultAbiCoder().encode(
+        ["uint256", "uint256", "uint256", "uint256", "uint256", "uint256[8]"],
+        [proof.merkleTreeDepth, proof.merkleTreeRoot, newNullifier, newGroupId, proof.scope, proof.points],
+      );
+
+      tx = await maciContract.signUp(
+        user2.pubKey.asContractParam(),
+        encodedProof,
+        AbiCoder.defaultAbiCoder().encode(["uint256"], [1]),
+      );
+
+      receipt = await tx.wait();
+
+      expect(receipt?.status).to.eq(1);
+    });
+
     it("should prevent signing up twice", async () => {
       await expect(
         maciContract.signUp(
@@ -203,6 +235,13 @@ describe("SemaphoreMultiGroup Gatekeeper", () => {
           AbiCoder.defaultAbiCoder().encode(["uint256"], [1]),
         ),
       ).to.be.revertedWithCustomError(semaphoreGatekeeperMultiGroup, "AlreadyRegistered");
+    });
+
+    it("should fail to set a new group when the caller is not the owner", async () => {
+      const [, secondSigner] = await getSigners();
+      await expect(
+        semaphoreGatekeeperMultiGroup.connect(secondSigner).setSemaphoreGroups(2),
+      ).to.be.revertedWithCustomError(semaphoreGatekeeperMultiGroup, "OwnableUnauthorizedAccount");
     });
   });
 });
