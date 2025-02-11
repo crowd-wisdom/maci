@@ -5,7 +5,7 @@ import { EDeploySteps, ESupportedChains } from "../../helpers/constants";
 import { ContractStorage } from "../../helpers/ContractStorage";
 import { Deployment } from "../../helpers/Deployment";
 import { EContracts, IDeployParams } from "../../helpers/types";
-import { getDeployedContractAddress } from "@semaphore-deployed-contracts/utilsSemaphore";
+import { getDeployedContractAddress } from "@semaphore-deployed-contracts";
 
 const deployment = Deployment.getInstance();
 const storage = ContractStorage.getInstance();
@@ -212,10 +212,8 @@ deployment.deployTask(EDeploySteps.Gatekeepers, "Deploy gatekeepers").then((task
 
     if (!skipDeploySemaphoreGatekeeperMultiGroup) {
       let semaphoreContractAddress
-
       if(hre.network.name === 'localhost'){
         semaphoreContractAddress = await getDeployedContractAddress(hre.network.name, "Semaphore")
-        console.info("Semaphore Address")
       } else {
         semaphoreContractAddress = deployment.getDeployConfigField<string>(
         EContracts.SemaphoreGatekeeperMultiGroup,
